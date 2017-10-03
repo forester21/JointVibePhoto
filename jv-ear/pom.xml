@@ -10,8 +10,55 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>foretser.project</groupId>
+    <groupId>forester.project</groupId>
     <artifactId>jv-ear</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>ear</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>forester.project</groupId>
+            <artifactId>jv-data-access</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>forester.project</groupId>
+            <artifactId>jv-web</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.1.0.Alpha5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.8</version>
+                <configuration>
+                    <applicationName>JointVibe</applicationName>
+                    <displayName>JointVibe</displayName>
+                    <modules>
+                        <webModule>
+                            <groupId>forester.project</groupId>
+                            <artifactId>jv-web</artifactId>
+                            <contextRoot>/</contextRoot>
+                        </webModule>
+                        <jarModule>
+                            <groupId>forester.project</groupId>
+                            <artifactId>jv-data-access</artifactId>
+                        </jarModule>
+                    </modules>
+                    <skinnyWars>true</skinnyWars>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

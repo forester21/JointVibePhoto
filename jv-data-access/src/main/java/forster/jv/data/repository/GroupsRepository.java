@@ -1,6 +1,6 @@
-package forester.jv.data.repository;
+package forster.jv.data.repository;
 
-import forester.jv.data.entity.Photos;
+import forster.jv.data.entity.Groups;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * Created by FORESTER on 24.09.17.
  */
 @Repository
-public interface PhotosRepository extends CrudRepository<Photos,Long> {
+public interface GroupsRepository extends CrudRepository<Groups,Long> {
 }

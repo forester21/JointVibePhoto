@@ -10,9 +10,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>foretser.project</groupId>
+    <groupId>forester.project</groupId>
     <artifactId>jv-data-access</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

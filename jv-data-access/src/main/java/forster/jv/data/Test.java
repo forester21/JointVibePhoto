@@ -1,7 +1,7 @@
-package forester.jv.data;
+package forster.jv.data;
 
-import forester.jv.data.entity.Users;
-import forester.jv.data.repository.UsersRepository;
+import forster.jv.data.repository.UsersRepository;
+import forster.jv.data.entity.Users;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 /**

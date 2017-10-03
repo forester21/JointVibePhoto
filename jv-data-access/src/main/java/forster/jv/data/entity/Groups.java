@@ -1,4 +1,4 @@
-package forester.jv.data.entity;
+package forster.jv.data.entity;
 
 import javax.persistence.*;
 import java.math.BigInteger;

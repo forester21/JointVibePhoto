@@ -1,6 +1,6 @@
-package forester.jv.data.repository;
+package forster.jv.data.repository;
 
-import forester.jv.data.entity.UsersGroupsAccess;
+import forster.jv.data.entity.UsersGroupsAccess;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

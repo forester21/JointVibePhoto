@@ -1,19 +1,20 @@
-package forester.jv.data.entity;
+package forster.jv.data.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import java.io.Serializable;
+import javax.persistence.*;
 import java.math.BigInteger;
 
 /**
  * Created by FORESTER on 24.09.17.
  */
-public class UsersGroupsAccessPK implements Serializable {
+@Entity
+@Table(name = "users_groups_access", schema = "public", catalog = "JV")
+@IdClass(UsersGroupsAccessPK.class)
+public class UsersGroupsAccess {
     private BigInteger userId;
     private BigInteger groupId;
 
-    @Column(name = "user_id")
     @Id
+    @Column(name = "user_id")
     public BigInteger getUserId() {
         return userId;
     }
@@ -22,8 +23,8 @@ public class UsersGroupsAccessPK implements Serializable {
         this.userId = userId;
     }
 
-    @Column(name = "group_id")
     @Id
+    @Column(name = "group_id")
     public BigInteger getGroupId() {
         return groupId;
     }
@@ -37,7 +38,7 @@ public class UsersGroupsAccessPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UsersGroupsAccessPK that = (UsersGroupsAccessPK) o;
+        UsersGroupsAccess that = (UsersGroupsAccess) o;
 
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
