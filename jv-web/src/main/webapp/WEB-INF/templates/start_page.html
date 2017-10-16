@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" th:href="@{/lib/jquery.fullPage.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/lib/bootstrap/css/bootstrap.min.css}">
+		<link rel="stylesheet" type="text/css" th:href="@{/lib/foresterFonts.css}" />
+
+		<script type="text/javascript" th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{/lib/jquery-3.2.1.min.js}"></script>
+		<script type="text/javascript" th:src="@{/lib/jquery.fullPage.min.js}"></script>
+		<script type="text/javascript" th:src="@{/lib/jquery.fittext.js}"></script>
+
+        <script type="text/javascript">
+			$(document).ready(function() {
+				$('#fullpage').fullpage({
+					sectionsColor: ['#1bbc9b', '#4BBFC3', 'whitesmoke'],
+					anchors: ['firstPage', 'secondPage', '3rdPage'],
+					scrollingSpeed: 500
+				});
+			});
+		</script>
+
+	</head>
+
+	<body>
+	<div id="fullpage">
+		<div class="section">
+			<div class="slide">
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<form name='loginForm'
+							  th:action="@{/start}" method="POST">
+							<h2 class="text-center aargh-font">
+								Войдите в свой аккаунт
+							</h2>
+							<div class="form-group">
+								<input type="text" class="form-control" id="username" placeholder="Логин" name="username"/>
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" id="password" placeholder="Пароль" name="password"/>
+							</div>
+							<div class="text-center">
+								<input type="submit" class="btn btn-lg btn-primary aargh-font" value="Войти"/>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+			</div>
+			<div class="slide active">
+				<div class="row">
+					<div class="col-lg-2">
+						<!-- <h2 class="text-center aargh-font">вход</h2> -->
+					</div>
+					<div class="col-lg-8">
+						<h1 id="fittext1" class="text-center main-font">JointVibe!</h1>
+						<h2 class="text-center aargh-font">Твой сервис для хранения фотографий</h2>
+					</div>
+					<div class="col-lg-2">
+						<!-- <h2 class="text-center aargh-font">регистрация</h2> -->
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-3">
+						<h2 class="text-center aargh-font">вход</h2>
+					</div>
+					<div class="col-lg-6"></div>
+					<div class="col-lg-3">
+						<h2 class="text-center aargh-font">регистрация</h2>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<!--/*@thymesVar id="user" type="forester.jv.data.entity.User"*/-->
+						<form name='registrationForm' th:action="@{/registration}" th:object="${user}" method='POST'>
+							<h2 class="text-center aargh-font">
+								Введите немного информации о себе
+							</h2>
+							<div class="form-group">
+								<input type="text" class="form-control" th:field="*{name}" placeholder="Имя">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" th:field="*{surname}" placeholder="Фамилия">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" th:field="*{email}" placeholder="Электронная почта">
+							</div>
+							<h2 class="text-center aargh-font">
+								И придумайте логин-пароль
+							</h2>
+							<div class="form-group">
+								<input type="text" class="form-control" th:field="*{login}" placeholder="Логин">
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" th:field="*{password}" placeholder="Пароль">
+							</div>
+							<div class="text-center">
+								<input class="btn btn-lg btn-primary aargh-font" value="Зарегистрироваться" type="submit">
+							</div>
+						</form>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+			</div>
+		</div>
+		<div class="section"></div>
+		<div class="section">Some section</div>
+	</div>
+	<script type="text/javascript">
+		$("#fittext1").fitText(0.8);
+	</script>
+	</body>
+</html>
