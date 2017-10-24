@@ -1,5 +1,6 @@
 package forester.jv.web.config;
 
+import forester.jv.data.config.AppConfig;
 import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,29 +22,25 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = "forester.jv")
+@ComponentScan(basePackages = "forester.jv.web")
+@Import({AppConfig.class})
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user").password("password").roles("USER").build());
-        return manager;
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth
+                .jdbcAuthentication()
+                    .dataSource(dataSource)
+                .usersByUsernameQuery(
+                        "select login,password,'true' from users where login=?")
+                .authoritiesByUsernameQuery(
+                        "select login, 'ROLE_ADMIN' from users where login=?");
     }
-
-//    @Autowired
-//    DataSource dataSource;
-
-//    @Autowired
-//    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-//
-//        auth.jdbcAuthentication().dataSource(dataSource)
-//                .usersByUsernameQuery(
-//                        "select login,password,'true' from users where login=?")
-//                .authoritiesByUsernameQuery(
-//                        "select login, 'ROLE_ADMIN' from users where login=?");
-//    }
 
     protected void configure(HttpSecurity http) throws Exception{
         http
