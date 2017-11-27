@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/jquery.fullPage.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/foresterFonts.css}" />
+
+    <script type="text/javascript" th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery.fullPage.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery.fittext.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery.row-grid.min.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#fullpage').fullpage({
+                sectionsColor: ['#4BBFC3'],
+                anchors: ['firstPage'],
+                scrollingSpeed: 500
+            });
+        });
+    </script>
+    <style>
+        .container {
+            background: #4BBFC3;
+        }
+
+        .item {
+            float: left;
+            margin-bottom: 10px;
+        }
+        .item img {
+            max-width: 100%;
+            max-height: 100%;
+            vertical-align: bottom;
+        }
+
+        .image {
+            position: relative;
+            width: 100%; /* для IE 6 */
+        }
+
+        h6 {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+        }
+        h6 span {
+            color: #fff;
+            font-size: 20px;
+            line-height: 55px;
+            background: rgba(0, 0, 0, 0.7);
+            background: #000;
+            padding: 10px;
+        }
+
+        .add-icon{
+            margin-bottom: 10;
+        }
+
+        .first-item {
+            clear: both;
+        }
+        /* remove margin bottom on last row */
+        .last-row, .last-row ~ .item {
+            margin-bottom: 0;
+        }
+        .albums-text{
+            margin-top: -10%;
+        }
+
+        .headtext{
+            padding-top: 10;
+        }
+
+        span {
+            font-size: 25px;
+        }
+
+        h2 {
+            font-size: 60px;
+        }
+
+        label {
+            font-size: 20px
+        }
+
+    </style>
+</head>
+<body>
+<div id="fullpage">
+    <div class="section">
+        <div class="slide">
+            <h1 id="fittext1"
+                class="text-center aargh-font headtext">Ваш профиль</h1>
+
+            <br></br>
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div id="info">
+                    <h2 class="aargh-font">Логин: forester21</h2>
+                    <h2 class="aargh-font">Имя: Егор</h2>
+                    <h2 class="aargh-font">Фамилия: Лесняк</h2>
+                    <h2 class="aargh-font">email: forester2k12@bk.ru</h2>
+                    <button type="button" id="change" class="btn btn-primary btn-sm aargh-font">
+                        <span>Изменить</span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="aargh-font">Выйти</span>
+                    </button>
+                </div>
+                <div id="info-form" style="display:none;">
+                    <form name='loginForm'
+                          action="/login" method='POST'>
+                        <div class="form-group">
+                            <h2 class="aargh-font">Логин:<input type="text" class="form-control" id="login" placeholder="Егор" name="username"></h2>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="pass" placeholder="Пароль" name="password">
+                        </div>
+                        <div class="text-center">
+                            <a class="btn btn-lg btn-primary aargh-font" href="${contextPath}/registration?new" role="button">Войти</a>
+                        </div>
+                    </form>
+                    <button type="button" id="success" class="btn btn-success btn-sm aargh-font">
+                        <span>Сохранить</span>
+                    </button>
+                    <button type="button" id="success" class="btn btn-warning btn-sm aargh-font">
+                        <span>Отмена</span>
+                    </button>
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="aargh-font">Выйти</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="slide active">
+            <h1 id="fittext2"
+                class="text-center aargh-font albums-text">Мои Альбомы</h1>
+            <div class="container">
+                <a th:each="album : ${albums}" class="item image" th:href="@{'/album?id='+${album.groupId}}">
+                    <img th:src="@{/lib/photos/grey.jpg}"width="300" height="200" class="img-thumbnail"/>
+                    <h6><span th:text="${album.name}">Новый Альбом</span></h6>
+                </a>
+                <!--<div class="item image">-->
+                    <!--<img th:src="@{/lib/photo/new.png}" width="300" height="200"/>-->
+                    <!--<h6><span>Создать Новый Альбом</span></h6>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="slide">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <form name='new-album'
+                      th:action="@{/albums/new_album}" th:object="${new_album}" method='POST'>
+                    <h2 class="aargh-font text-center">Новый альбом</h2>
+                    <div class="form-group" id="form-base">
+                        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Название альбома" name="1">
+                    </div>
+                    <div class="text-center">
+                        <a class="btn btn-lg btn-primary aargh-font" id="crypto" role="button">
+                            <span>Добавить криптозащиту?</span></a>
+                    </div>
+                    <div id="encrypt" hidden>
+                        <h2 class='text-center aargh-font'>Криптозащита</h2>
+                        <div class='form-group'><input type='password' class='form-control' id='name' th:field="*{password}" placeholder='Пароль' name='1'></div>
+                        <div class='form-group'><input type='password' class='form-control' id='name' placeholder='Пароль еще раз' name='1'></div>
+                        <h3 class='text-center aargh-font'>Внимание! При добавлении криптозащиты вы вводите новый пароль,
+                            который нельзя будет восстановить в случае, если вы забудете его! Однако данный способ защиты
+                            полностью предотвращает возможность утечки ваших личных фотографий третьим лицам.</h3>
+                    </div>
+                    <br></br>
+                    <div class="text-center">
+                        <button class="btn btn-lg btn-success aargh-font" id="proceed" type="submit" role="button">
+                            <span>Создать</span></button>
+                    </div>
+
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#fittext1").fitText(1.2);
+    $("#fittext2").fitText(1.2);
+    $("#fittext3").fitText(1.2);
+    $(document).ready(function() {
+        var options = {minMargin: 5, maxMargin: 15, itemSelector: ".item", firstItemClass: "first-item"};
+        $(".container").rowGrid(options);
+        $("#crypto").click(function(){
+            $(this).hide();
+            $("#encrypt").toggle();
+        });
+        $("#proceed").click(function(){
+            if(!$("#crypto").is(":visible")){
+                alert("Не забудьте пароль!:)")
+            }
+        });
+        $("#change").click(function(){
+            $("#info").toggle();
+            $("#info-form").toggle();
+        })
+    });
+</script>
+</body>
+</html>s

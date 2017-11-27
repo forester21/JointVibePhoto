@@ -9,6 +9,7 @@ import java.math.BigInteger;
 @Entity
 @Table(name = "groups")
 public class Group {
+    private String name;
     private BigInteger groupId;
     private String joinKey;
     private Boolean encrypted;
@@ -51,8 +52,19 @@ public class Group {
         return password;
     }
 
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Basic
+    @Column(name = "name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

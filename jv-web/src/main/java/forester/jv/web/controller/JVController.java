@@ -29,20 +29,13 @@ public class JVController {
 
     @PostMapping(value = "/start")
     public String loginPost(){
-        return "redirect:/home";
+        return "redirect:/albums";
     }
 
     @PostMapping(value="/registration")
     public String registartionPost(@ModelAttribute User user){
         log.info("Saving user with id= "+user.getUserId());
         usersRepository.save(user);
-        return "redirect:/home";
+        return "redirect:/start";
     }
-
-    @RequestMapping(value="/home")
-    public String homePage(Model model){
-        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
-        return "home";
-    }
-
 }

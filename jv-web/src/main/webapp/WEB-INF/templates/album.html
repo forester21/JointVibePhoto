@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/nanogallery2/dist/css/nanogallery2.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/jquery.fullPage.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/lib/foresterFonts.css}" />
+
+    <script type="text/javascript" th:src="@{/lib/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery.fullPage.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery.fittext.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/jquery.row-grid.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/nanogallery2/dist/jquery.nanogallery2.min.js}"></script>
+
+    <style>
+        .albums-text{
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .back {
+            background: #262626;
+        }
+        .back-photo{
+            background: #FFFFFF
+        }
+        .left-pad{
+            margin-left: 50px;
+        }
+    </style>
+</head>
+<body class="back">
+<h1 id="fittext1" class="text-center aargh-font albums-text">Кипр 2017</h1>
+<div class="col-lg-1">
+    <div class="col-lg-1">
+        <h1 class="left-pad">
+            <a th:href="@{/albums}" class="glyphicon glyphicon-home"></a>
+            <br/><br/>
+            <a th:href="@{/upload(id=${#httpServletRequest.getParameter('id')})}" class="glyphicon glyphicon-camera"></a>
+            <br/><br/>
+            <a href="/" class="glyphicon glyphicon-cog"></a>
+            <br/><br/>
+            <a href="/" class="glyphicon glyphicon-trash"></a>
+        </h1>
+    </div>
+</div>
+<div class="col-lg-10" data-nanogallery2='{
+        "thumbnailWidth": "350",
+        "thumbnailHeight": "auto",
+        "galleryDisplayMode": "moreButton",
+        "thumbnailBorderVertical": 0,
+        "thumbnailBorderHorizontal": 0,
+        "colorScheme": {
+          "thumbnail": {
+            "borderColor": "rgba(255,255,255,1)"
+          }
+        },
+        "thumbnailLabel": {
+          "display": false
+        },
+        "thumbnailHoverEffect2": "imageScale150",
+        "thumbnailAlignment": "center"
+      }'>
+    <a th:each="meta : ${photos_meta}" th:href="@{'/album/photo?id='+${meta.photoId}}" th:text="${meta.name}"></a>
+
+</div>
+<div class="col-lg-1"></div>
+</body>
+</html>
+<script type="text/javascript">
+    $("#fittext1").fitText(1.2);
+
+</script>
+</body>
+</html>

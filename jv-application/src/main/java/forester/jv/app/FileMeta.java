@@ -1,35 +1,50 @@
 package forester.jv.app;
 
+import java.math.BigInteger;
+
 /**
  * Created by FORESTER on 29.10.17.
  */
 public class FileMeta {
-    private String fileName;
-    private String fileSize;
-    private String fileType;
+    private String name;
+    private String size;
+    private String type;
 
-    public String getFileName() {
-        return fileName;
+    public FileMeta(String name, String size, String type) {
+        this.name = name;
+        this.size = size;
+        this.type = type;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public FileMeta() {
     }
 
-    public String getFileSize() {
-        return fileSize;
+    public FileMeta(String name) {
+        this.name = name;
     }
 
-    public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
+    public String getName() {
+        return name;
     }
 
-    public String getFileType() {
-        return fileType;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -39,17 +54,17 @@ public class FileMeta {
 
         FileMeta fileMeta = (FileMeta) o;
 
-        if (fileName != null ? !fileName.equals(fileMeta.fileName) : fileMeta.fileName != null) return false;
-        if (fileSize != null ? !fileSize.equals(fileMeta.fileSize) : fileMeta.fileSize != null) return false;
-        return fileType != null ? fileType.equals(fileMeta.fileType) : fileMeta.fileType == null;
+        if (name != null ? !name.equals(fileMeta.name) : fileMeta.name != null) return false;
+        if (size != null ? !size.equals(fileMeta.size) : fileMeta.size != null) return false;
+        return type != null ? type.equals(fileMeta.type) : fileMeta.type == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = fileName != null ? fileName.hashCode() : 0;
-        result = 31 * result + (fileSize != null ? fileSize.hashCode() : 0);
-        result = 31 * result + (fileType != null ? fileType.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (size != null ? size.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 }

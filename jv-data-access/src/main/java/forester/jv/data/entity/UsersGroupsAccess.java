@@ -10,6 +10,14 @@ import java.math.BigInteger;
 @Table(name = "users_groups_access", schema = "public", catalog = "JV")
 @IdClass(UsersGroupsAccessPK.class)
 public class UsersGroupsAccess {
+
+    public UsersGroupsAccess(BigInteger userId, BigInteger groupId) {
+        this.userId = userId;
+        this.groupId = groupId;
+    }
+
+    public UsersGroupsAccess(){}
+
     private BigInteger userId;
     private BigInteger groupId;
 

@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>forester.project</groupId>
+            <artifactId>jv-application</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.1.4</version>

@@ -1,6 +1,7 @@
 package forester.jv.data.entity;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 /**
  * Created by FORESTER on 24.09.17.
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
-    private int userId;
+    private BigInteger userId;
     private String login;
     private String password;
     private String name;
@@ -18,11 +19,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    public int getUserId() {
+    public BigInteger getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 
@@ -83,19 +84,18 @@ public class User {
 
         User user = (User) o;
 
-        if (userId != user.userId) return false;
+        if (userId != null ? !userId.equals(user.userId) : user.userId != null) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        return email != null ? email.equals(user.email) : user.email == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = userId;
+        int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);

@@ -45,14 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests()
-                    .antMatchers("/lib/**","/start","/registration").permitAll()
+                    .antMatchers("/lib/**","/start","/registration","/photos/upload").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
                     .loginPage("/start")
                     .permitAll()
-                    .successForwardUrl("/start")
-                    .failureUrl("/start")
+                    .successForwardUrl("/albums")
+                    .failureUrl("/lol")
                     .and()
                 .logout()
                     .logoutUrl("/logout")
