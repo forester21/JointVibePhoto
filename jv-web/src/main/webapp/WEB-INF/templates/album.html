@@ -64,15 +64,19 @@
         "thumbnailHoverEffect2": "imageScale150",
         "thumbnailAlignment": "center"
       }'>
-    <a th:each="meta : ${photos_meta}" th:href="@{'/album/photo?id='+${meta.photoId}}" th:text="${meta.name}"></a>
-
+    <a th:each="meta : ${photos_meta}" th:href="@{'/album/photo?album='+${album}+'&id='+${meta.photoId}}" th:text="${meta.name}"></a>
 </div>
 <div class="col-lg-1"></div>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var cookie = [[${cookie}]]
+    document.cookie = "forester="+cookie;
+    /*]]>*/
+</script>
 </html>
 <script type="text/javascript">
     $("#fittext1").fitText(1.2);
-
 </script>
 </body>
 </html>

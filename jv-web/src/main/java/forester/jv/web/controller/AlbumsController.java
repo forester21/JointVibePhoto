@@ -51,8 +51,9 @@ public class AlbumsController {
     @PostMapping(value = "/new_album")
     public String newAlbum(@ModelAttribute Group album){
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (album.getPassword()!=null)
+        if (album.getPassword()!=null){
             album.setEncrypted(true);
+        }
         Group savedAlbum = groupsRepository.save(album);
         BigInteger userId = usersRepository.findByLogin(login).getUserId();
         usersGroupsAccessRepository.save(new UsersGroupsAccess(userId,savedAlbum.getGroupId()));
