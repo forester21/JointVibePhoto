@@ -21,5 +21,4 @@ public interface GroupsRepository extends CrudRepository<Group,Long> {
     @Query("select g from UsersGroupsAccess g, User u where g.userId = u.userId " +
             "and u.login = :login")
     void addNewAlbum(@Param("login") String login);
-
 }

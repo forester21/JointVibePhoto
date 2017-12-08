@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @Table(name = "groups")
 public class Group {
     private String name;
-    private BigInteger groupId;
+    private Long groupId;
     private String joinKey;
     private Boolean encrypted;
     private String password;
@@ -18,11 +18,11 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
-    public BigInteger getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(BigInteger groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
@@ -74,17 +74,18 @@ public class Group {
 
         Group group = (Group) o;
 
+        if (name != null ? !name.equals(group.name) : group.name != null) return false;
         if (groupId != null ? !groupId.equals(group.groupId) : group.groupId != null) return false;
         if (joinKey != null ? !joinKey.equals(group.joinKey) : group.joinKey != null) return false;
         if (encrypted != null ? !encrypted.equals(group.encrypted) : group.encrypted != null) return false;
-        if (password != null ? !password.equals(group.password) : group.password != null) return false;
+        return password != null ? password.equals(group.password) : group.password == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = groupId != null ? groupId.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
         result = 31 * result + (joinKey != null ? joinKey.hashCode() : 0);
         result = 31 * result + (encrypted != null ? encrypted.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);

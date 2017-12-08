@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,9 +70,12 @@ public class UploadPhotosController {
                 photoMetaEntity.setName(file.getOriginalFilename());
                 photoMetaEntity.setGroupId(albumId);
                 Photo photo = new Photo();
+                byte[] photoBytes = file.getBytes();
+                if (cryptoUtils.isEncrypted(albumId)){
+                    photoBytes = cryptoUtils.encryptPhoto(photoBytes, Base64.decodeBase64(cookie),albumId);
+                }
                 Long photoId = metaRepository.save(photoMetaEntity).getPhotoId();
-                byte[] encryptedPhoto = cryptoUtils.encryptPhoto(file.getBytes(), Base64.decodeBase64(cookie),albumId);
-                photo.setPhoto(encryptedPhoto);
+                photo.setPhoto(photoBytes);
                 photo.setPhotoId(photoId);
                 photosRepository.save(photo);
             } catch (IOException e) {
@@ -85,7 +89,9 @@ public class UploadPhotosController {
     }
 
     @GetMapping
-    public String uploadGET(@RequestParam("id") Long albumId){
+    public String uploadGET(@RequestParam("id") Long albumId,
+                            Model model){
+        model.addAttribute("album",albumId);
         return "upload_photos";
     }
 }

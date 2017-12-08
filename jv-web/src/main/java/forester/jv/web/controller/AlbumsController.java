@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -31,10 +33,12 @@ public class AlbumsController {
     GroupsRepository groupsRepository;
     @Autowired
     UsersGroupsAccessRepository usersGroupsAccessRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     //needed after logging in
     @PostMapping
-    public String doNothing(){
+    public String redirectToAlbumsAfterAuth(){
         return "redirect:/albums";
     }
 
@@ -51,11 +55,13 @@ public class AlbumsController {
     @PostMapping(value = "/new_album")
     public String newAlbum(@ModelAttribute Group album){
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (album.getPassword()!=null){
+        album.setEncrypted(false);
+        if (!StringUtils.isEmpty(album.getPassword())){
             album.setEncrypted(true);
+            album.setPassword(passwordEncoder.encode(album.getPassword()));
         }
         Group savedAlbum = groupsRepository.save(album);
-        BigInteger userId = usersRepository.findByLogin(login).getUserId();
+        Long userId = usersRepository.findByLogin(login).getUserId();
         usersGroupsAccessRepository.save(new UsersGroupsAccess(userId,savedAlbum.getGroupId()));
         return "redirect:/albums";
     }

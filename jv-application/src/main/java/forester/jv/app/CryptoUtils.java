@@ -1,6 +1,8 @@
 package forester.jv.app;
 
+import forester.jv.data.repository.GroupsRepository;
 import forester.jv.data.repository.PhotosRepository;
+import forester.jv.data.repository.UsersRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.StreamUtils;
@@ -28,19 +30,22 @@ public class CryptoUtils {
     @Autowired
     private PhotosRepository photoRepository;
 
+    @Autowired
+    private GroupsRepository groupsRepository;
+
     public CryptoUtils() throws NoSuchPaddingException, NoSuchAlgorithmException {
         cookieKeys = new HashMap<Long, SecretKey>();
     }
 
     public byte[] encryptPhoto(byte[] photo, byte[] cookie, Long albumId) throws Exception{
         byte[] photoKeyBytes = decryptCookie(cookie,albumId);
-        SecretKey photoKey = generateKeyByPassword(photoKeyBytes);
+        SecretKey photoKey = generateKeyByPassword(photoKeyBytes,albumId);
         return encrypt(photoKey,photo);
     }
 
     public byte[] decryptPhoto(Long photoId, byte[] cookie, Long albumId) throws Exception{
         byte[] photoKeyBytes = decryptCookie(cookie,albumId);
-        SecretKey photoKey = generateKeyByPassword(photoKeyBytes);
+        SecretKey photoKey = generateKeyByPassword(photoKeyBytes,albumId);
         byte[] photo = photoRepository.findOne(photoId).getPhoto();
         return decrypt(photoKey,photo);
     }
@@ -64,6 +69,16 @@ public class CryptoUtils {
             log.error("Session timeout, reenter key");
             return null;
         }
+    }
+
+    public boolean checkCookie(Long albumId){
+        if (cookieKeys.containsKey(albumId))
+            return true;
+        return false;
+    }
+
+    public boolean isEncrypted(Long albumId){
+        return groupsRepository.findOne(albumId).getEncrypted();
     }
 
     private byte[] crypt(SecretKey key, byte[] inputBytes, int cryptMode) throws Exception{
@@ -95,8 +110,12 @@ public class CryptoUtils {
         return crypt(key,inputBytes,Cipher.DECRYPT_MODE);
     }
 
-    private SecretKey generateKeyByPassword(byte[] keyBytes) throws Exception{
+    private SecretKey generateKeyByPassword(byte[] keyBytes, Long albumId) throws Exception{
         //TODO maybe modify this part (salt or smth else)
-        return new SecretKeySpec(keyBytes, "AES");
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        String salt = "testSalt";
+        KeySpec spec = new PBEKeySpec(new String(keyBytes).toCharArray(), salt.getBytes(), 65536, 128);
+        SecretKey tmp = factory.generateSecret(spec);
+        return new SecretKeySpec(tmp.getEncoded(), "AES");
     }
 }
