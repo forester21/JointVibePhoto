@@ -1,11 +1,9 @@
-package forester.jv.app;
+package forester.jv.app.crypto;
 
 import forester.jv.data.repository.GroupsRepository;
 import forester.jv.data.repository.PhotosRepository;
-import forester.jv.data.repository.UsersRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.*;
@@ -13,8 +11,11 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.KeySpec;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * Created by FORESTER on 06.12.17.
@@ -23,9 +24,13 @@ public class CryptoUtils {
 
     private static int buffSize = 1024;
 
+    //Cookie will expire in 1 hour
+    private static long EXPIRATION_TIME = 1000L*60L*60L;
+
+
     final static Logger log = Logger.getLogger(CryptoUtils.class);
 
-    private HashMap<Long,SecretKey> cookieKeys;
+    private HashMap<Long,SecretKeyWrapper> cookieKeys;
 
     @Autowired
     private PhotosRepository photoRepository;
@@ -34,7 +39,7 @@ public class CryptoUtils {
     private GroupsRepository groupsRepository;
 
     public CryptoUtils() throws NoSuchPaddingException, NoSuchAlgorithmException {
-        cookieKeys = new HashMap<Long, SecretKey>();
+        cookieKeys = new HashMap<Long, SecretKeyWrapper>();
     }
 
     public byte[] encryptPhoto(byte[] photo, byte[] cookie, Long albumId) throws Exception{
@@ -52,12 +57,13 @@ public class CryptoUtils {
 
     public byte[] generateCookie(byte[] albumKey, Long albumId) throws Exception {
         SecretKey key = KeyGenerator.getInstance("AES").generateKey();
-        cookieKeys.put(albumId,key);
+        SecretKeyWrapper keyWrapper = new SecretKeyWrapper(key,new Date());
+        cookieKeys.put(albumId,keyWrapper);
         return encrypt(key, albumKey);
     }
 
     private byte[] decryptCookie(byte[] cookie, Long albumId) throws Exception{
-        SecretKey cookieKey = cookieKeys.get(albumId);
+        SecretKey cookieKey = cookieKeys.get(albumId).getCookieSecretKey();
         if (StringUtils.isEmpty(cookie)){
             log.error("cookie string is empty!");
             return null;
@@ -72,8 +78,13 @@ public class CryptoUtils {
     }
 
     public boolean checkCookie(Long albumId){
-        if (cookieKeys.containsKey(albumId))
-            return true;
+        SecretKeyWrapper keyWrapper = cookieKeys.get(albumId);
+        if (keyWrapper!=null){
+            if (System.currentTimeMillis() - keyWrapper.getCookieExpirationDate().getTime() < EXPIRATION_TIME)
+                return true;
+            else
+                cookieKeys.remove(albumId);
+        }
         return false;
     }
 
@@ -111,10 +122,9 @@ public class CryptoUtils {
     }
 
     private SecretKey generateKeyByPassword(byte[] keyBytes, Long albumId) throws Exception{
-        //TODO maybe modify this part (salt or smth else)
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        String salt = "testSalt";
-        KeySpec spec = new PBEKeySpec(new String(keyBytes).toCharArray(), salt.getBytes(), 65536, 128);
+        byte[] salt = groupsRepository.findOne(albumId).getPassword().substring(7,15).getBytes();
+        KeySpec spec = new PBEKeySpec(new String(keyBytes).toCharArray(), salt, 65536, 128);
         SecretKey tmp = factory.generateSecret(spec);
         return new SecretKeySpec(tmp.getEncoded(), "AES");
     }

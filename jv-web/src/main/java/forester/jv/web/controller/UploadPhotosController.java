@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import forester.jv.app.CryptoUtils;
+import forester.jv.app.crypto.CryptoUtils;
 import forester.jv.data.FileMeta;
 import forester.jv.data.entity.Photo;
 import forester.jv.data.entity.PhotoMeta;
@@ -23,6 +23,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.WebUtils;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static forester.jv.web.controller.AlbumController.COOKIE_NAME;
 
 @Controller
 @RequestMapping("/upload")
@@ -53,9 +58,14 @@ public class UploadPhotosController {
     @ResponseBody
     public ResponseEntity<List<FileMeta>> uploadPOST(@RequestParam("fileupload") List<MultipartFile> mpf,
                                                      @RequestParam("id") Long albumId,
-                                                     @CookieValue("forester") String cookie) throws Exception{
+                                                     HttpServletRequest request) throws Exception{
 
         log.info("Started handling photos");
+
+        String cookie = "";
+        if (cryptoUtils.isEncrypted(albumId)){
+            cookie = WebUtils.getCookie(request,COOKIE_NAME+albumId).getValue();
+        }
 
         ArrayList<FileMeta> files = new ArrayList<FileMeta>(mpf.size());
 

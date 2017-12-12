@@ -1,6 +1,6 @@
 package forester.jv.app.config;
 
-import forester.jv.app.CryptoUtils;
+import forester.jv.app.crypto.CryptoUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

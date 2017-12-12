@@ -33,13 +33,13 @@
     </style>
 </head>
 <body class="back">
-<h1 id="fittext1" class="text-center aargh-font albums-text">Кипр 2017</h1>
+<h1 id="fittext1" th:text="${album_name}" class="text-center aargh-font albums-text"></h1>
 <div class="col-lg-1">
     <div class="col-lg-1">
         <h1 class="left-pad">
             <a th:href="@{/albums}" class="glyphicon glyphicon-home"></a>
             <br/><br/>
-            <a th:href="@{/upload(id=${#httpServletRequest.getParameter('id')})}" class="glyphicon glyphicon-camera"></a>
+            <a th:href="@{'/upload?id='+${album}}" class="glyphicon glyphicon-camera"></a>
             <br/><br/>
             <a href="/" class="glyphicon glyphicon-cog"></a>
             <br/><br/>
@@ -47,7 +47,7 @@
         </h1>
     </div>
 </div>
-<div class="col-lg-10" data-nanogallery2='{
+<div th:if="${not #lists.isEmpty(photos_meta)}" class="col-lg-10" data-nanogallery2='{
         "thumbnailWidth": "350",
         "thumbnailHeight": "auto",
         "galleryDisplayMode": "moreButton",
@@ -68,12 +68,6 @@
 </div>
 <div class="col-lg-1"></div>
 </body>
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var cookie = [[${cookie}]]
-    document.cookie = "forester="+cookie;
-    /*]]>*/
-</script>
 </html>
 <script type="text/javascript">
     $("#fittext1").fitText(1.2);
