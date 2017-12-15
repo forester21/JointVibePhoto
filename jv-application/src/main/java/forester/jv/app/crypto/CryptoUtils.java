@@ -76,8 +76,10 @@ public class CryptoUtils {
     public boolean checkCookie(Long albumId){
         SecretKeyWrapper keyWrapper = cookieKeys.get(albumId);
         if (keyWrapper!=null){
-            if (!keyWrapper.isCookieExpired())
+            if (!keyWrapper.isCookieExpired()) {
+                keyWrapper.updateCookie();
                 return true;
+            }
             else
                 cookieKeys.remove(albumId);
         }

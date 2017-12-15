@@ -41,6 +41,10 @@ public class SecretKeyWrapper {
         return (cookieExpirationDate.getTime() - System.currentTimeMillis()<0);
     }
 
+    public void updateExpirationDate(){
+        this.cookieExpirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MILLIS);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
