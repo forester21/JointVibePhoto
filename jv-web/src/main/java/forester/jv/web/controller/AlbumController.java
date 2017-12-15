@@ -1,6 +1,7 @@
 package forester.jv.web.controller;
 
 import forester.jv.app.crypto.CryptoUtils;
+import forester.jv.data.entity.Group;
 import forester.jv.data.entity.PhotoMeta;
 import forester.jv.data.repository.GroupsRepository;
 import forester.jv.data.repository.PhotosMetaRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,12 +49,21 @@ public class AlbumController {
 
     @GetMapping
     public String album(Model model,
-                        @RequestParam(value="id") Long albumId) throws Exception{
-
-        //TODO - check client cookie + expiration
-        if (cryptoUtils.isEncrypted(albumId)&&!cryptoUtils.checkCookie(albumId)){
-                return "redirect:/album/passwd?album="+albumId;
+                        @RequestParam(value="id") Long albumId,
+                        HttpServletRequest request) throws Exception{
+        if (!checkUser(albumId)){
+            return "redirect:/albums";
         }
+        if (cryptoUtils.isEncrypted(albumId)){
+            Cookie cookie = WebUtils.getCookie(request,COOKIE_NAME+albumId);
+            if (cookie==null){
+                return "redirect:/album/passwd?album="+albumId;
+            }
+            if (!cryptoUtils.checkCookie(albumId)){
+                return "redirect:/album/passwd?album="+albumId+"&action=ses";
+            }
+        }
+
         return getAlbumPage(model,albumId);
     }
 
@@ -61,6 +72,10 @@ public class AlbumController {
                                            @RequestParam(value = "album") Long albumId,
                                            HttpServletRequest request,
                                            Model model) throws Exception{
+        if (!checkUser(albumId)){
+            return null;
+        }
+        cryptoUtils.checkCookie(albumId);
         String cookie = "";
         if (cryptoUtils.isEncrypted(albumId)){
             cookie = WebUtils.getCookie(request,COOKIE_NAME+albumId).getValue();
@@ -82,6 +97,9 @@ public class AlbumController {
     public String albumPasswordGET(Model model,
                                    @RequestParam(value = "album") Long albumId,
                                    @RequestParam(value = "action", required = false) String action){
+        if (!checkUser(albumId)){
+            return "redirect:/albums";
+        }
         String text = "";
         if ("ses".equals(action))
             text = "Сессия истекла, введите пароль повторно";
@@ -114,5 +132,10 @@ public class AlbumController {
         model.addAttribute("album",albumId);
         model.addAttribute("album_name",groupsRepository.findOne(albumId).getName());
         return "album";
+    }
+
+    public boolean checkUser(Long albumId){
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return groupsRepository.checkUserAndAlbum(userName,albumId) > 0;
     }
 }

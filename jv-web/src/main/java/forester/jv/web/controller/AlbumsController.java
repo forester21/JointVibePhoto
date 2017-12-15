@@ -44,11 +44,12 @@ public class AlbumsController {
 
     @GetMapping
     public String albums(Model model){
-//        User user = usersRepository.findByLogin(auth.getName());
-        List<Group> albums = groupsRepository.findAlbumsByLogin(SecurityContextHolder.getContext().getAuthentication().getName());
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = usersRepository.findByLogin(login);
+        List<Group> albums = groupsRepository.findAlbumsByLogin(login);
         model.addAttribute("albums",albums);
         model.addAttribute("new_album",new Group());
-//        model.addAttribute("user",user);
+        model.addAttribute("user",user);
         return "albums";
     }
 

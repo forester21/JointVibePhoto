@@ -24,9 +24,6 @@ public class CryptoUtils {
 
     private static int buffSize = 1024;
 
-    //Cookie will expire in 1 hour
-    private static long EXPIRATION_TIME = 1000L*60L*60L;
-
 
     final static Logger log = Logger.getLogger(CryptoUtils.class);
 
@@ -57,7 +54,7 @@ public class CryptoUtils {
 
     public byte[] generateCookie(byte[] albumKey, Long albumId) throws Exception {
         SecretKey key = KeyGenerator.getInstance("AES").generateKey();
-        SecretKeyWrapper keyWrapper = new SecretKeyWrapper(key,new Date());
+        SecretKeyWrapper keyWrapper = new SecretKeyWrapper(key);
         cookieKeys.put(albumId,keyWrapper);
         return encrypt(key, albumKey);
     }
@@ -71,7 +68,6 @@ public class CryptoUtils {
         if (cookieKey != null){
             return decrypt(cookieKey,cookie);
         } else {
-            //TODO check session timeout and notify user
             log.error("Session timeout, reenter key");
             return null;
         }
@@ -80,7 +76,7 @@ public class CryptoUtils {
     public boolean checkCookie(Long albumId){
         SecretKeyWrapper keyWrapper = cookieKeys.get(albumId);
         if (keyWrapper!=null){
-            if (System.currentTimeMillis() - keyWrapper.getCookieExpirationDate().getTime() < EXPIRATION_TIME)
+            if (!keyWrapper.isCookieExpired())
                 return true;
             else
                 cookieKeys.remove(albumId);

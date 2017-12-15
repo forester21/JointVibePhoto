@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                     .loginPage("/start")
                     .permitAll()
                     .successForwardUrl("/albums")
-                    .failureUrl("/lol")
+                    .failureUrl("/start")
                     .and()
                 .logout()
                     .logoutUrl("/logout")

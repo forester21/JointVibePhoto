@@ -10,10 +10,11 @@ public class SecretKeyWrapper {
 
     private SecretKey cookieSecretKey;
     private Date cookieExpirationDate;
+    private final long EXPIRATION_TIME_IN_MILLIS = 1000L*60L*1L;
 
-    public SecretKeyWrapper(SecretKey cookieSecretKey, Date cookieExpirationDate) {
+    public SecretKeyWrapper(SecretKey cookieSecretKey) {
         this.cookieSecretKey = cookieSecretKey;
-        this.cookieExpirationDate = cookieExpirationDate;
+        this.cookieExpirationDate = new Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MILLIS);
     }
 
     public SecretKey getCookieSecretKey() {
@@ -30,6 +31,14 @@ public class SecretKeyWrapper {
 
     public void setCookieExpirationDate(Date cookieExpirationDate) {
         this.cookieExpirationDate = cookieExpirationDate;
+    }
+
+    public void updateCookie(){
+        cookieExpirationDate.setTime(cookieExpirationDate.getTime()+EXPIRATION_TIME_IN_MILLIS);
+    }
+
+    public boolean isCookieExpired(){
+        return (cookieExpirationDate.getTime() - System.currentTimeMillis()<0);
     }
 
     @Override

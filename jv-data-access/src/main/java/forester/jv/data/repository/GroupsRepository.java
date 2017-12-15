@@ -21,4 +21,8 @@ public interface GroupsRepository extends CrudRepository<Group,Long> {
     @Query("select g from UsersGroupsAccess g, User u where g.userId = u.userId " +
             "and u.login = :login")
     void addNewAlbum(@Param("login") String login);
+
+    @Query("select count(*) from UsersGroupsAccess g, User u where g.userId = u.userId " +
+            "and u.login = :login and g.groupId = :albumId")
+    int checkUserAndAlbum(@Param("login") String login, @Param("albumId") Long albumId);
 }

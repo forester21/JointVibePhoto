@@ -100,16 +100,16 @@
             <div class="col-md-2"></div>
             <div class="col-md-8">
                 <div id="info">
-                    <h2 class="aargh-font">Логин: forester21</h2>
-                    <h2 class="aargh-font">Имя: Егор</h2>
-                    <h2 class="aargh-font">Фамилия: Лесняк</h2>
-                    <h2 class="aargh-font">email: forester2k12@bk.ru</h2>
-                    <button type="button" id="change" class="btn btn-primary btn-sm aargh-font">
-                        <span>Изменить</span>
-                    </button>
-                    <button type="button" class="btn btn-default btn-danger">
+                    <h2 class="aargh-font" th:text="${'Логин: '+user.login}"></h2>
+                    <h2 class="aargh-font" th:text="${'Имя: '+user.name}"></h2>
+                    <h2 class="aargh-font" th:text="${'Фамилия: '+user.surname}"></h2>
+                    <h2 class="aargh-font" th:text="${'Email: '+user.email}"></h2>
+                    <!--<button type="button" id="change" class="btn btn-primary btn-sm aargh-font">-->
+                        <!--<span>Изменить</span>-->
+                    <!--</button>-->
+                    <a type="button" class="btn btn-default btn-danger" th:href="@{/logout}">
                         <span class="aargh-font">Выйти</span>
-                    </button>
+                    </a>
                 </div>
                 <div id="info-form" style="display:none;">
                     <form name='loginForm'
@@ -143,7 +143,7 @@
             <div class="container">
                 <a th:each="album : ${albums}" class="item image" th:href="@{'/album?id='+${album.groupId}}">
                     <img th:src="@{/lib/photos/grey.jpg}"width="300" height="200" class="img-thumbnail"/>
-                    <h6><span th:text="${album.name}">Новый Альбом</span></h6>
+                    <h6><span th:text="${album.name}"><span class="glyphicon glyphicon-lock margin-top"></span></span></h6>
                 </a>
                 <!--<div class="item image">-->
                     <!--<img th:src="@{/lib/photo/new.png}" width="300" height="200"/>-->
